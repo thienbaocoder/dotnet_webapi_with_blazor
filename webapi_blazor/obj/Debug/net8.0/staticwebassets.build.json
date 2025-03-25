@@ -1,0 +1,125 @@
+{
+  "Version": 1,
+  "Hash": "+2M3buDtSozNGoxW2jzpQ8AG1qwAIaY8wkI19aNnhD0=",
+  "Source": "webapi_blazor",
+  "BasePath": "_content/webapi_blazor",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "webapi_blazor\\wwwroot",
+      "Source": "webapi_blazor",
+      "ContentRoot": "C:\\Users\\PC\\OneDrive\\Desktop\\Cybersoft\\dotnet_api_blazor\\webapi_blazor\\wwwroot\\",
+      "BasePath": "_content/webapi_blazor",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\PC\\OneDrive\\Desktop\\Cybersoft\\dotnet_api_blazor\\webapi_blazor\\wwwroot\\css\\site.css",
+      "SourceId": "webapi_blazor",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\PC\\OneDrive\\Desktop\\Cybersoft\\dotnet_api_blazor\\webapi_blazor\\wwwroot\\",
+      "BasePath": "_content/webapi_blazor",
+      "RelativePath": "css/site#[.{fingerprint}]?.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "dyy86t8f1y",
+      "Integrity": "9fxbqVOtyigAoz+eJQQTEep/mRiL1ByG1TaJ7/TTBNQ=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\site.css"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "css/site.css",
+      "AssetFile": "C:\\Users\\PC\\OneDrive\\Desktop\\Cybersoft\\dotnet_api_blazor\\webapi_blazor\\wwwroot\\css\\site.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1087"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"9fxbqVOtyigAoz+eJQQTEep/mRiL1ByG1TaJ7/TTBNQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 21 Mar 2025 11:59:45 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-9fxbqVOtyigAoz+eJQQTEep/mRiL1ByG1TaJ7/TTBNQ="
+        }
+      ]
+    },
+    {
+      "Route": "css/site.dyy86t8f1y.css",
+      "AssetFile": "C:\\Users\\PC\\OneDrive\\Desktop\\Cybersoft\\dotnet_api_blazor\\webapi_blazor\\wwwroot\\css\\site.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1087"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"9fxbqVOtyigAoz+eJQQTEep/mRiL1ByG1TaJ7/TTBNQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Fri, 21 Mar 2025 11:59:45 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "dyy86t8f1y"
+        },
+        {
+          "Name": "label",
+          "Value": "css/site.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-9fxbqVOtyigAoz+eJQQTEep/mRiL1ByG1TaJ7/TTBNQ="
+        }
+      ]
+    }
+  ]
+}

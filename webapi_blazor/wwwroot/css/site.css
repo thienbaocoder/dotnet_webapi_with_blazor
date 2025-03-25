@@ -1,0 +1,84 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/*MainLayout*/
+/* Header */
+.top-links {
+  font-size: 14px;
+
+  a {
+    color: #333;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #007bff;
+    }
+  }
+}
+
+/* Logo */
+.ebay-logo {
+  font-size: 28px;
+  font-weight: bold;
+
+  .red {
+    color: #e53238;
+  }
+  .blue {
+    color: #0064d2;
+  }
+  .yellow {
+    color: #f5af02;
+  }
+  .green {
+    color: #86b817;
+  }
+}
+
+/* Search Bar */
+.search-bar {
+  max-width: 600px;
+  width: 100%;
+
+  input {
+    border-right: none;
+  }
+
+  select {
+    border-left: none;
+  }
+}
+
+/* Breadcrumb */
+.sub-links {
+  font-size: 14px;
+
+  a {
+    color: #007bff;
+    transition: color 0.3s ease;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+/* Product Card */
+.product-card {
+  border: 1px solid #ddd;
+  margin-bottom: 15px;
+  background-color: #fff;
+
+  .card-title {
+    font-size: 16px;
+    font-weight: bold;
+  }
+
+  .card-text {
+    font-size: 14px;
+  }
+}

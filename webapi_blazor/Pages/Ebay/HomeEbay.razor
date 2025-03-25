@@ -1,0 +1,74 @@
+@* @page "/"
+@layout MainLayout
+@inject ProductService _productService
+
+<div class="container">
+    <!-- Product Listings -->
+    <div class="row">
+        @foreach (var product in _productService.productList)
+        {
+            <div class="col-md-6">
+                <div class="card product-card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="https://i.pravatar.cc?u=@product.Id" class="img-fluid rounded-start"
+                                alt="Product Image">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">@product.ProductName</h5>
+                                <p class="card-text"><strong>@product.Price</strong></p>
+                                <p class="card-text text-muted">Or Best Offer • Free Shipping</p>
+                                <p class="card-text text-danger">129 watching</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Pagination Controls -->
+    <ul class="pagination justify-content-center mt-3">
+        <li class="page-item @(CurrentPage == 0 ? "disabled" : "")">
+            <button class="page-link" @onclick="PrevPage">‹</button>
+        </li>
+        <li class="page-item active">
+            <span class="page-link">Page @(CurrentPage + 1)</span>
+        </li>
+        <li class="page-item">
+            <button class="page-link" @onclick="NextPage">›</button>
+        </li>
+    </ul>
+
+</div>
+
+@code {
+    private int CurrentPage = 0;
+    private int PageSize = 10;
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        await _productService.GetAllProductListCategory(CurrentPage, PageSize);
+        StateHasChanged();
+    }
+
+    private async Task NextPage()
+    {
+        CurrentPage++;
+        await LoadData();
+    }
+
+    private async Task PrevPage()
+    {
+        if (CurrentPage > 0)
+        {
+            CurrentPage--;
+            await LoadData();
+        }
+    }
+} *@

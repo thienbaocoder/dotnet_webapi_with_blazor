@@ -1,0 +1,168 @@
+@inherits LayoutComponentBase
+@inject CategoryService _categoryService
+@inject ProductService _productService
+
+<div class="container mt-3">
+    <!-- Header -->
+    <div class="header-container">
+        <div class="top-links d-flex justify-content-between align-items-center py-1 px-3 bg-light">
+            <div class="left-links">
+                <a href="#" class="text-decoration-none me-2">Hi! Sign in or register</a>
+                <a href="#" class="text-decoration-none me-2">Daily Deals</a>
+                <a href="#" class="text-decoration-none me-2">Brand Outlet</a>
+                <a href="#" class="text-decoration-none me-2">Gift Cards</a>
+                <a href="#" class="text-decoration-none">Help & Contact</a>
+            </div>
+            <div class="right-links">
+                <a href="#" class="text-decoration-none me-2">🇻🇳 Ship to</a>
+                <a href="#" class="text-decoration-none me-2">Sell</a>
+                <a href="#" class="text-decoration-none me-2">Watchlist</a>
+                <a href="#" class="text-decoration-none me-2">My eBay</a>
+                <a href="#" class="text-decoration-none">
+                    <i class="fas fa-shopping-cart"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+            <div class="container-fluid">
+                <div class="navbar-brand ebay-logo">
+                    <span class="red">e</span>
+                    <span class="blue">b</span>
+                    <span class="yellow">a</span>
+                    <span class="green">y</span>
+                </div>
+                <div class="d-flex flex-grow-1 justify-content-center">
+                    <div class="input-group search-bar">
+                        <input type="text" class="form-control flex-grow-1" placeholder="Search for anything">
+                        <select @onchange="(e) => OnCategoryChange(e)" class="form-select" style="max-width: 150px;">
+                            <option value="">All Categories</option>
+                            @foreach (var category in _categoryService.categoryList)
+                            {
+                                <option value="@category.Name">@category.Name</option>
+                            }
+                        </select>
+                        <button class="btn btn-primary">Search</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Breadcrumb -->
+        <div class="sub-links px-3 py-1">
+            <a href="#" class="text-decoration-none">eBay</a> >
+            <a href="#" class="text-decoration-none">Luxury on eBay</a>
+        </div>
+    </div>
+
+    <!-- Filter & Sorting -->
+    <div class="d-flex justify-content-between align-items-center my-3">
+        <div>
+            <button class="btn btn-outline-secondary">All Listings</button>
+            <button class="btn btn-outline-secondary">Auction</button>
+            <button class="btn btn-outline-secondary">Buy It Now</button>
+        </div>
+        <div class="d-flex align-items-center">
+            <span class="me-2">Sort by:</span>
+            <select class="form-select">
+                <option>Best Match</option>
+                <option>Price: Low to High</option>
+                <option>Price: High to Low</option>
+            </select>
+            <button class="btn btn-outline-secondary ms-2"><i class="fas fa-list"></i></button>
+        </div>
+    </div>
+    <!-- Product Listings -->
+    <div class="row">
+        @foreach (var product in lstProduct)
+        {
+            <div class="col-md-6">
+                <div class="card product-card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="https://i.pravatar.cc?u=@product.Id" class="img-fluid rounded-start"
+                                alt="Product Image">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">@product.ProductName</h5>
+                                <p class="card-text"><strong>@product.Price</strong></p>
+                                <p class="card-text text-muted">Or Best Offer • Free Shipping</p>
+                                <p class="card-text text-danger">129 watching</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Pagination Controls -->
+    <ul class="pagination justify-content-center mt-3">
+        <li class="page-item @(CurrentPage == 0 ? "disabled" : "")">
+            <button class="page-link" @onclick="PrevPage">‹</button>
+        </li>
+        <li class="page-item active">
+            <span class="page-link">Page @(CurrentPage + 1)</span>
+        </li>
+        <li class="page-item">
+            <button class="page-link" @onclick="NextPage">›</button>
+        </li>
+    </ul>
+    <!-- Main Content -->
+    <main class="content mt-4">
+        @Body
+    </main>
+</div>
+
+@code {
+    private int CurrentPage = 0;
+    private int PageSize = 10;
+    private string selectedCategoryName = "";
+    private string selectedSortOption = "";
+    private List<ProductListCategory> lstProduct = new();
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.WhenAll(_categoryService.GetAllCategory(), LoadData());
+    }
+
+    private async Task OnCategoryChange(ChangeEventArgs e)
+    {
+        selectedCategoryName = e.Value.ToString();
+        await LoadData();
+    }
+    private void FilterProducts()
+    {
+        if (string.IsNullOrEmpty(selectedCategoryName))
+        {
+            lstProduct = _productService.productList;
+        }
+        else
+        {
+            lstProduct = _productService.productList.Where(x => x.Category == selectedCategoryName).ToList();
+        }
+    }
+    private async Task LoadData()
+    {
+        await _productService.GetAllProductListCategory(CurrentPage, PageSize);
+        FilterProducts();
+        StateHasChanged();
+    }
+
+    private async Task NextPage()
+    {
+        CurrentPage++;
+        await LoadData();
+    }
+
+    private async Task PrevPage()
+    {
+        if (CurrentPage > 0)
+        {
+            CurrentPage--;
+            await LoadData();
+        }
+    }
+
+}
