@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Middleware.Middleware;
 using webapi_blazor.Helper;
-using webapi_blazor.models.EbayDB;
+using webapi_blazor.Models.EbayDB;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,18 +71,21 @@ builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<ProductService>();
 
 // middleware cross
-builder.Services.AddCors(option=>{
-    option.AddPolicy("allow_origin", policy => {
+builder.Services.AddCors(option =>
+{
+    option.AddPolicy("allow_origin", policy =>
+    {
         // policy.AllowAnyOrigin(); //Cho phép tất cả các client đều có thể gửi dữ liệu đến server
-        policy.WithOrigins("https://localhost:5001","https://login.cybersoft.edu.vn","http://127.0.0.1:5500")
+        policy.WithOrigins("https://localhost:5001", "https://login.cybersoft.edu.vn", "http://127.0.0.1:5500")
             .AllowAnyHeader() //Cho phép rq tất cả header
             .AllowAnyMethod() //Cho phép rq tất cả method (POST,PUT,GET,DELETE,OPTION)
             .AllowCredentials(); ////Cho phép cookie...
     });
     // option.AddDefaultPolicy();
-      option.AddPolicy("allow_GET", policy => {
+    option.AddPolicy("allow_GET", policy =>
+    {
         // policy.AllowAnyOrigin(); //Cho phép tất cả các client đều có thể gửi dữ liệu đến server
-        policy.WithOrigins("https://localhost:5001","https://login.cybersoft.edu.vn","http://127.0.0.1:5500")
+        policy.WithOrigins("https://localhost:5001", "https://login.cybersoft.edu.vn", "http://127.0.0.1:5500")
             .AllowAnyHeader() //Cho phép rq tất cả header
             .WithMethods("GET") //Cho phép rq tất cả method (POST,PUT,GET,DELETE,OPTION)
             .AllowCredentials(); ////Cho phép cookie...
@@ -95,33 +99,36 @@ var Issuer = builder.Configuration["jwt:Issuer"];
 var Audience = builder.Configuration["jwt:Audience"];
 // Thêm dịch vụ Authentication vào ứng dụng, sử dụng JWT Bearer làm phương thức xác thực
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-{        
-        // Thiết lập các tham số xác thực token
-        options.TokenValidationParameters = new TokenValidationParameters()
-        {
-            // Kiểm tra và xác nhận Issuer (nguồn phát hành token)
-            ValidateIssuer = true, 
-            ValidIssuer = Issuer, // Biến `Issuer` chứa giá trị của Issuer hợp lệ
-            // Kiểm tra và xác nhận Audience (đối tượng nhận token)
-            ValidateAudience = true,
-            ValidAudience = Audience, // Biến `Audience` chứa giá trị của Audience hợp lệ
-            // Kiểm tra và xác nhận khóa bí mật được sử dụng để ký token
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(privateKey)), 
-            // Sử dụng khóa bí mật (`privateKey`) để tạo SymmetricSecurityKey nhằm xác thực chữ ký của token
-            // Giảm độ trễ (skew time) của token xuống 0, đảm bảo token hết hạn chính xác
-            ClockSkew = TimeSpan.Zero, 
-            // Xác định claim chứa vai trò của user (để phân quyền)
-            RoleClaimType = ClaimTypes.Role, 
-            // Xác định claim chứa tên của user
-            NameClaimType = ClaimTypes.Name, 
-            // Kiểm tra thời gian hết hạn của token, không cho phép sử dụng token hết hạn
-            ValidateLifetime = true
-        };
+{
+    // Thiết lập các tham số xác thực token
+    options.TokenValidationParameters = new TokenValidationParameters()
+    {
+        // Kiểm tra và xác nhận Issuer (nguồn phát hành token)
+        ValidateIssuer = true,
+        ValidIssuer = Issuer, // Biến `Issuer` chứa giá trị của Issuer hợp lệ
+                              // Kiểm tra và xác nhận Audience (đối tượng nhận token)
+        ValidateAudience = true,
+        ValidAudience = Audience, // Biến `Audience` chứa giá trị của Audience hợp lệ
+                                  // Kiểm tra và xác nhận khóa bí mật được sử dụng để ký token
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(privateKey)),
+        // Sử dụng khóa bí mật (`privateKey`) để tạo SymmetricSecurityKey nhằm xác thực chữ ký của token
+        // Giảm độ trễ (skew time) của token xuống 0, đảm bảo token hết hạn chính xác
+        ClockSkew = TimeSpan.Zero,
+        // Xác định claim chứa vai trò của user (để phân quyền)
+        RoleClaimType = ClaimTypes.Role,
+        // Xác định claim chứa tên của user
+        NameClaimType = ClaimTypes.Name,
+        // Kiểm tra thời gian hết hạn của token, không cho phép sử dụng token hết hạn
+        ValidateLifetime = true
+    };
 });
 // Thêm dịch vụ Authorization để hỗ trợ phân quyền người dùng
 builder.Services.AddAuthorization();
 
+//Middleware 
+builder.Services.AddScoped<BlockIpMiddleware>();
+builder.Services.AddScoped<DemoFilter>();
 
 
 
@@ -156,6 +163,8 @@ if (app.Environment.IsDevelopment())
 app.UseCors("allow_origin");
 //Xác thực
 app.UseRouting(); //routing của blazor server và api
+//middleware custom
+// app.UseMiddleware<BlockIpMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 

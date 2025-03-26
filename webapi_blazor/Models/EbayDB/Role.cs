@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace webapi_blazor.models.EbayDB;
+namespace webapi_blazor.Models.EbayDB;
 
 public partial class Role
 {
@@ -15,5 +15,5 @@ public partial class Role
 
     public bool? Deleted { get; set; }
 
-    public virtual ICollection<RoleGroup> RoleGroups { get; set; } = new List<RoleGroup>();
+    public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 }

@@ -21,6 +21,16 @@ namespace webapi_blazor.Controllers
         {
             // _context = db;
         }
+        // [ActionFilter]
+        [DemoFilter]
+        [HttpPost("post")]
+        public async Task<IActionResult> post(User model)
+        {
+            //action handler
+
+
+            return Ok("post ok");
+        }
         [HttpGet("HandleUser")]
         public async Task<IActionResult> HandleUser()
         {

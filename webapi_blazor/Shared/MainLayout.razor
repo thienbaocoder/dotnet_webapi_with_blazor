@@ -65,10 +65,10 @@
         </div>
         <div class="d-flex align-items-center">
             <span class="me-2">Sort by:</span>
-            <select class="form-select">
-                <option>Best Match</option>
-                <option>Price: Low to High</option>
-                <option>Price: High to Low</option>
+            <select @onchange="(e) => OnSortChange(e)" class="form-select">
+                <option value="">Best Match</option>
+                <option value="low">Price: Low to High</option>
+                <option value="high">Price: High to Low</option>
             </select>
             <button class="btn btn-outline-secondary ms-2"><i class="fas fa-list"></i></button>
         </div>
@@ -81,14 +81,14 @@
                 <div class="card product-card">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            <img src="https://i.pravatar.cc?u=@product.Id" class="img-fluid rounded-start"
+                            <img src="@product.Image" class="img-fluid rounded-start"
                                 alt="Product Image">
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
                                 <h5 class="card-title">@product.ProductName</h5>
                                 <p class="card-text"><strong>@product.Price</strong></p>
-                                <p class="card-text text-muted">Or Best Offer • Free Shipping</p>
+                                <p class="card-text text-primary">@product.Description</p>
                                 <p class="card-text text-danger">129 watching</p>
                             </div>
                         </div>
@@ -121,7 +121,7 @@
     private int PageSize = 10;
     private string selectedCategoryName = "";
     private string selectedSortOption = "";
-    private List<ProductListCategory> lstProduct = new();
+    private List<EbayProduct> lstProduct = new();
     protected override async Task OnInitializedAsync()
     {
         await Task.WhenAll(_categoryService.GetAllCategory(), LoadData());
@@ -131,22 +131,19 @@
     {
         selectedCategoryName = e.Value.ToString();
         await LoadData();
+        StateHasChanged();
     }
-    private void FilterProducts()
+    private async Task OnSortChange(ChangeEventArgs e)
     {
-        if (string.IsNullOrEmpty(selectedCategoryName))
-        {
-            lstProduct = _productService.productList;
-        }
-        else
-        {
-            lstProduct = _productService.productList.Where(x => x.Category == selectedCategoryName).ToList();
-        }
+        selectedSortOption = e.Value.ToString();
+        await LoadData();
+        StateHasChanged();
     }
+
     private async Task LoadData()
     {
-        await _productService.GetAllProductListCategory(CurrentPage, PageSize);
-        FilterProducts();
+        await _productService.GetAllEbayProducts(CurrentPage, PageSize, selectedSortOption, selectedCategoryName);
+        lstProduct = _productService.ebayProductList;
         StateHasChanged();
     }
 

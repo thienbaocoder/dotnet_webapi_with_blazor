@@ -2,7 +2,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using webapi_blazor.models.EbayDB;
+using webapi_blazor.Models.EbayDB;
+using Microsoft.EntityFrameworkCore;
 
 public class JwtAuthService
 {
@@ -17,11 +18,13 @@ public class JwtAuthService
         _audience = Configuration["jwt:Audience"];
         _context = db;
     }
-    
-    public string GenerateToken(webapi_blazor.models.EbayDB.User userLogin)
+
+    public string GenerateToken(webapi_blazor.Models.EbayDB.User userLogin)
     {
         // Khóa bí mật để ký token
         var key = Encoding.ASCII.GetBytes(_key);
+
+
         // Tạo danh sách các claims cho token
         var claims = new List<Claim>
         {
@@ -30,9 +33,27 @@ public class JwtAuthService
             new Claim(JwtRegisteredClaimNames.Sub, userLogin.Username),   // Subject của token
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // Unique ID của token
             new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()), // Thời gian tạo token
-            new Claim(JwtRegisteredClaimNames.Email, userLogin.Email) // Thời gian tạo token
+            new Claim(JwtRegisteredClaimNames.Email, userLogin.Email), // Thời gian tạo token
         };
+
         //Add role vào token 
+        var userRoles = _context.Database.SqlQueryRaw<string>($@"SELECT Roles.RoleName FROM Roles, Users, UserRole where UserRole.UserId = Users.id and Roles.Id = UserRole.RoleId and Users.Id = {userLogin.Id}").ToList();
+        foreach (var item in userRoles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, item));
+        }
+
+        // List<string> lstRole = new List<string>();
+        // var userRoles = _context.UserRoles
+        //     .Where(ur => ur.UserId == userLogin.Id)
+        //     .Include(ur => ur.Role)
+        //     .Select(ur => ur.Role.RoleName)
+        //     .ToList();
+
+        // foreach (var item in userRoles)
+        // {
+        //     claims.Add(new Claim(ClaimTypes.Role, item));
+        // }
 
 
         // Tạo khóa bí mật để ký token
@@ -71,7 +92,7 @@ public class JwtAuthService
             var jwtToken = handler.ReadJwtToken(token);
 
             // Lấy username từ claims (thường nằm trong claim "sub" hoặc "name")
-            var usernameClaim = jwtToken.Claims.FirstOrDefault(x =>x.Type == "UserName"); // Common in some identity providers
+            var usernameClaim = jwtToken.Claims.FirstOrDefault(x => x.Type == "UserName"); // Common in some identity providers
 
             if (usernameClaim == null)
             {

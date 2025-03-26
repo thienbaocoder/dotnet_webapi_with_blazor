@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.ObjectPool;
-using webapi_blazor.models.EbayDB;
+using webapi_blazor.Models.EbayDB;
 //using webapi_blazor.Models;
 
 namespace webapi_blazor.Controllers

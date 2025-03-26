@@ -180,3 +180,4 @@ C:\Users\PC\OneDrive\Desktop\Cybersoft\dotnet_api_blazor\webapi_blazor\obj\Debug
 C:\Users\PC\OneDrive\Desktop\Cybersoft\dotnet_api_blazor\webapi_blazor\obj\Debug\net8.0\webapi_blazor.pdb
 C:\Users\PC\OneDrive\Desktop\Cybersoft\dotnet_api_blazor\webapi_blazor\obj\Debug\net8.0\webapi_blazor.genruntimeconfig.cache
 C:\Users\PC\OneDrive\Desktop\Cybersoft\dotnet_api_blazor\webapi_blazor\obj\Debug\net8.0\ref\webapi_blazor.dll
+C:\Users\PC\OneDrive\Desktop\Cybersoft\dotnet_api_blazor\webapi_blazor\obj\Debug\net8.0\webapi_blazor.sourcelink.json

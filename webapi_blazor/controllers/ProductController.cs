@@ -5,9 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using webapi_blazor.models.EbayDB;
+using webapi_blazor.Models.EbayDB;
 
 namespace webapi_blazor.Controllers
 {
@@ -23,6 +24,7 @@ namespace webapi_blazor.Controllers
             _mapper = mapper;
         }
 
+        [Authorize(Roles = "Buyer")]
         [HttpGet("/product/getall")]
         public async Task<IActionResult> getAll(int pageIndex = 0, int pageSize = 10)
         {
@@ -47,12 +49,52 @@ namespace webapi_blazor.Controllers
         }
 
         [HttpGet("/product/getProductListCategory")]
-        public async Task<IActionResult> GetProductListCategory(int pageIndex = 0, int pageSize = 10)
+        public async Task<IActionResult> GetProductListCategory(int pageIndex = 0, int pageSize = 10, string sortOption = "", string category = "")
         {
-            var data = _context.ProductListCategories.Skip(pageIndex * pageSize).Take(pageSize).ToList();
+            var res = _context.ProductListCategories.AsQueryable();
+            if (!string.IsNullOrEmpty(category))
+            {
+                res = res.Where(p => p.Category == category);
+            }
+            if (sortOption == "low")
+            {
+                res = res.OrderBy(p => p.Price);
+            }
+            else if (sortOption == "high")
+            {
+                res = res.OrderByDescending(p => p.Price);
+            }
+            else
+            {
+                res = res.OrderBy(p => p.Id);
+            }
+            var data = await res.Skip(pageIndex * pageSize).Take(pageSize).ToListAsync();
             return Ok(data);
         }
 
+        [HttpGet("/product/getProductEbayDB")]
+        public async Task<IActionResult> GetProductEbayDB(int pageIndex = 0, int pageSize = 10, string sortOption = "", string category = "")
+        {
+            var res = _context.EbayProducts.AsQueryable();
+            if (!string.IsNullOrEmpty(category))
+            {
+                res = res.Where(p => p.Category == category);
+            }
+            if (sortOption == "low")
+            {
+                res = res.OrderBy(p => p.Price);
+            }
+            else if (sortOption == "high")
+            {
+                res = res.OrderByDescending(p => p.Price);
+            }
+            else
+            {
+                res = res.OrderBy(p => p.Id);
+            }
+            var data = await res.Skip(pageIndex * pageSize).Take(pageSize).ToListAsync();
+            return Ok(data);
+        }
 
         [HttpGet("/product/getbyid/{id}")]
         public async Task<IActionResult> getById([FromRoute] int id)

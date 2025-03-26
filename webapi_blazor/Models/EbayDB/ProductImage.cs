@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace webapi_blazor.models.EbayDB;
+namespace webapi_blazor.Models.EbayDB;
 
 public partial class ProductImage
 {

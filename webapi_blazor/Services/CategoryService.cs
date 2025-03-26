@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using webapi_blazor.models.EbayDB;
+using webapi_blazor.Models.EbayDB;
 public class CategoryService
 {
     private readonly HttpClient _httpClient;

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using webapi_blazor.Helper;
-using webapi_blazor.models.EbayDB;
+using webapi_blazor.Models.EbayDB;
 //using webapi_blazor.Models;
 
 namespace webapi_blazor.Controllers

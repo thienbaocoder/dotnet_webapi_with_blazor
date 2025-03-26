@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace webapi_blazor.models.EbayDB;
+namespace webapi_blazor.Models.EbayDB;
 
 public partial class User
 {
@@ -33,5 +33,7 @@ public partial class User
 
     public virtual ICollection<Rating> RatingRaters { get; set; } = new List<Rating>();
 
-    public virtual ICollection<UserGroup> UserGroups { get; set; } = new List<UserGroup>();
+    public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+
+    public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace webapi_blazor.models.EbayDB;
+namespace webapi_blazor.Models.EbayDB;
 
 public partial class Group
 {
@@ -14,8 +14,4 @@ public partial class Group
     public DateTime? CreatedAt { get; set; }
 
     public bool? Deleted { get; set; }
-
-    public virtual ICollection<RoleGroup> RoleGroups { get; set; } = new List<RoleGroup>();
-
-    public virtual ICollection<UserGroup> UserGroups { get; set; } = new List<UserGroup>();
 }

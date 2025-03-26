@@ -1,5 +1,5 @@
 using AutoMapper;
-using webapi_blazor.models.EbayDB;
+using webapi_blazor.Models.EbayDB;
 using System.Text.Json;
 
 public class MappingProfile : Profile
