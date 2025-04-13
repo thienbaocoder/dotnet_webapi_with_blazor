@@ -1,12 +1,15 @@
 using System.Net;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Middleware.Middleware;
+using StackExchange.Redis;
+using webapi_blazor.Filter;
 using webapi_blazor.Helper;
 using webapi_blazor.Models.EbayDB;
 
@@ -50,6 +53,9 @@ builder.Services.AddSwaggerGen(options =>
 
 
 
+// builder.Services.AddControllers().AddJsonOptions(option => {
+//     option.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+// });
 builder.Services.AddControllers();
 
 builder.Services.AddRazorPages();
@@ -57,7 +63,7 @@ builder.Services.AddServerSideBlazor();
 // Đọc connection string từ appsettings.json
 var connectionString = builder.Configuration.GetConnectionString("EbayConnection");
 //Kết nối db
-builder.Services.AddDbContext<EbayContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<EbayContext>(options => options.UseLazyLoadingProxies(false).UseSqlServer(connectionString));
 //Kết nối db 2 
 // builder.Services.AddDbContext<EbayContextExtend>(options =>options.UseSqlServer(connectionString));
 //DI service Auto mapper
@@ -127,10 +133,37 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Services.AddAuthorization();
 
 //Middleware 
-builder.Services.AddScoped<BlockIpMiddleware>();
-builder.Services.AddScoped<DemoFilter>();
+// builder.Services.AddScoped<BlockIpMiddleware>();
+// builder.Services.AddScoped<DemoFilter>();
 
+//filter
+builder.Services.AddScoped<Authorize_Bao>();
+builder.Services.AddScoped<LogFilter>();
+builder.Services.AddScoped<FilterDemoAsync>();
 
+// cache
+builder.Services.AddMemoryCache();
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = "localhost:6379"; // hoặc connection string từ Cloud
+    options.InstanceName = "Ebay:";
+});
+
+//Làm việc với nhiều db redis
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    return ConnectionMultiplexer.Connect("localhost:6379");
+});
+
+builder.Services.AddSingleton<RedisHelper>();
+//Repository pattern & unit of work pattern
+//repo
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+//unit
+builder.Services.AddScoped<IUnitOfWork,UnitOfWork>();
+//service
+builder.Services.AddScoped<IProductService, ProductService>();
 
 //-----------------------------------------------------------------------------
 
@@ -159,10 +192,10 @@ if (app.Environment.IsDevelopment())
 //         await context.Response.WriteAsJsonAsync(errorResponse);
 //     });
 // });
-//middle ware cors
-app.UseCors("allow_origin");
 //Xác thực
 app.UseRouting(); //routing của blazor server và api
+//middle ware cors
+app.UseCors("allow_origin");
 //middleware custom
 // app.UseMiddleware<BlockIpMiddleware>();
 app.UseAuthentication();

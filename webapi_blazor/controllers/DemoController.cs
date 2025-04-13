@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using webapi_blazor.Filter;
 using webapi_blazor.Models;
 //using webapi_blazor.Models;
 
@@ -23,6 +24,7 @@ namespace webapi_blazor.Controllers
         }
         // [ActionFilter]
         [DemoFilter]
+        [ServiceFilter(typeof(Authorize_Bao))]
         [HttpPost("post")]
         public async Task<IActionResult> post(User model)
         {
@@ -31,6 +33,27 @@ namespace webapi_blazor.Controllers
 
             return Ok("post ok");
         }
+        [DemoFilter(abc = "123")]
+        [ServiceFilter(typeof(LogFilter))]
+        [HttpGet("GetDataDemoFilter")]
+        public IActionResult GetDataDemoFilter()
+        {
+            //action invoke();
+            var res = _context.Products.Skip(0).Take(10).ToListAsync();
+
+            return Ok(res);
+        }
+        [ServiceFilter(typeof(FilterDemoAsync))]
+        [HttpGet("GetActionAsync")]
+        public async Task<IActionResult> GetActionAsync()
+        {
+            //action invoke();
+            var res = _context.Products.Skip(0).Take(10).ToList();
+            Console.WriteLine("Action xử lý");
+            return Ok(res);
+        }
+
+
         [HttpGet("HandleUser")]
         public async Task<IActionResult> HandleUser()
         {

@@ -37,10 +37,9 @@ public class JwtAuthService
         };
 
         //Add role vào token 
-        var userRoles = _context.Database.SqlQueryRaw<string>($@"SELECT Roles.RoleName FROM Roles, Users, UserRole where UserRole.UserId = Users.id and Roles.Id = UserRole.RoleId and Users.Id = {userLogin.Id}").ToList();
-        foreach (var item in userRoles)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, item));
+         var userRoles = _context.UserRoles.Where(us => us.UserId == userLogin.Id).ToList();
+        foreach(var item in userRoles){
+            claims.Add(new Claim(ClaimTypes.Role, item.Role.RoleName));
         }
 
         // List<string> lstRole = new List<string>();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 using webapi_blazor.Helper;
 using webapi_blazor.Models.EbayDB;
@@ -43,6 +44,7 @@ namespace webapi_blazor.Controllers
         }
 
         [Authorize]
+        [OutputCache(Duration = 60, VaryByHeaderNames = new[] { "Authorization" })]
         [HttpGet("/user/GetProfile")]
         public async Task<IActionResult> GetProfile([FromHeader] string authorization)
         {
